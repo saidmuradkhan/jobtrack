@@ -15,6 +15,36 @@ and track every application from "applied" to "offer". Salaries are converted wi
 - **Frontend:** React (Vite)
 - **Infra:** Docker Compose · GitHub Actions
 
+## Backend API
+
+| Method | Path | Description |
+|---|---|---|
+| GET | `/health` | Liveness check |
+| POST | `/api/auth/register/` | Create an account (`username`, `email`, `password`) |
+| POST | `/api/auth/token/` | Log in, returns `access` + `refresh` JWT |
+| POST | `/api/auth/token/refresh/` | Get a new access token |
+| GET | `/api/auth/me/` | Current user |
+| GET, POST | `/api/applications/` | List / create your applications |
+| GET, PATCH, PUT, DELETE | `/api/applications/{id}/` | One application |
+
+List filters: `?status=interview`, `?search=python` (company, position, notes),
+`?ordering=-applied_on` (`applied_on`, `company`, `salary`, `created_at`).
+Every request except register/login needs `Authorization: Bearer <access>`,
+and each user only ever sees their own applications.
+
+## Run the backend locally
+
+```bash
+cd backend
+python -m venv .venv
+.venv\Scripts\activate        # Windows  (Linux/macOS: source .venv/bin/activate)
+pip install -r requirements-dev.txt
+python manage.py migrate
+python manage.py createsuperuser   # optional, for /admin
+python manage.py runserver
+pytest
+```
+
 ## Structure
 
 ```
@@ -25,13 +55,13 @@ jobtrack/
 
 ## Roadmap
 
-- [ ] Django project + `applications` app, run dev server
-- [ ] `Application` model (company, position, status, applied_on, notes) + Django admin
-- [ ] DRF serializers + CRUD API for applications
-- [ ] User registration & JWT login (`djangorestframework-simplejwt`)
-- [ ] Each user sees only their own applications (permissions)
-- [ ] Filtering & search (status, company)
-- [ ] API tests (pytest-django)
+- [x] Django project + `applications` app, run dev server
+- [x] `Application` model (company, position, status, applied_on, salary, currency, url, notes) + Django admin
+- [x] DRF serializers + CRUD API for applications
+- [x] User registration & JWT login (`djangorestframework-simplejwt`)
+- [x] Each user sees only their own applications (permissions)
+- [x] Filtering & search (status, company)
+- [x] API tests (pytest-django) + CI
 - [ ] React frontend: login, applications list, add/edit form
 - [ ] Kanban board view by status
 - [ ] Import vacancies from az-job-radar API
