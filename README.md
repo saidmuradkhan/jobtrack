@@ -5,6 +5,8 @@ Full-stack job application tracker: browse vacancies collected by
 and track every application from "applied" to "offer". Salaries are converted with
 [cbar-rates](https://github.com/saidmuradkhan/cbar-rates).
 
+**Live demo:** jobs.saidmuradkhan.dev *(coming soon)*
+
 > Part of a 3-service system: az-job-radar (Python) · cbar-rates (Go) · **jobtrack** (Django + React)
 
 ## Tech stack
