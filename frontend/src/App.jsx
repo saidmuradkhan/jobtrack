@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getMe, getTokens, logout } from './api.js'
 import AuthForm from './components/AuthForm.jsx'
+import Dashboard from './components/Dashboard.jsx'
 
 export default function App() {
   const [user, setUser] = useState(null)
@@ -37,6 +38,7 @@ export default function App() {
           <button onClick={handleLogout}>Log out</button>
         </div>
       </header>
+      <Dashboard />
     </div>
   )
 }
