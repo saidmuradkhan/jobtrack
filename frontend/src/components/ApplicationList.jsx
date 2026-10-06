@@ -2,7 +2,7 @@ import { formatSalary, statusLabel } from '../statuses.js'
 
 export default function ApplicationList({ applications, onEdit, onDelete }) {
   if (applications.length === 0) {
-    return <p className="card muted">No applications yet.</p>
+    return <p className="card muted">No applications found.</p>
   }
 
   return (

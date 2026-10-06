@@ -259,3 +259,68 @@ a {
     grid-template-columns: 1fr;
   }
 }
+
+.grow {
+  flex: 1 1 220px;
+}
+
+.toggle {
+  display: inline-flex;
+}
+
+.toggle button {
+  border-radius: 0;
+}
+
+.toggle button:first-child {
+  border-radius: 6px 0 0 6px;
+}
+
+.toggle button:last-child {
+  border-radius: 0 6px 6px 0;
+  border-left: none;
+}
+
+.toggle button.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(180px, 1fr));
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 200px;
+  padding: 10px;
+  border: 1px dashed transparent;
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.column.drop-target {
+  border-color: var(--accent);
+}
+
+.column h3 {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.kanban-card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  background: var(--bg);
+  cursor: grab;
+  font-size: 14px;
+}
