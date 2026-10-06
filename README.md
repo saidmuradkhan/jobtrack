@@ -45,12 +45,28 @@ python manage.py runserver
 pytest
 ```
 
+## Run the frontend locally
+
+With the backend running on `127.0.0.1:8000`:
+
+```bash
+cd frontend
+npm install
+npm run dev        # http://localhost:5173, /api is proxied to the backend
+npm run lint
+npm run build
+```
+
+Sign up, then add applications from the list view or drag cards between
+columns on the board view to change their status.
+For a deployed build, set `VITE_API_URL` to the backend URL.
+
 ## Structure
 
 ```
 jobtrack/
 ├── backend/    # Django + DRF API
-└── frontend/   # React app
+└── frontend/   # React (Vite) app
 ```
 
 ## Roadmap
@@ -62,8 +78,8 @@ jobtrack/
 - [x] Each user sees only their own applications (permissions)
 - [x] Filtering & search (status, company)
 - [x] API tests (pytest-django) + CI
-- [ ] React frontend: login, applications list, add/edit form
-- [ ] Kanban board view by status
+- [x] React frontend: login, applications list, add/edit form
+- [x] Kanban board view by status, filter and search
 - [ ] Import vacancies from az-job-radar API
 - [ ] Salary conversion via cbar-rates
 - [ ] PostgreSQL + Docker Compose
