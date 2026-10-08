@@ -113,3 +113,37 @@ def test_user_field_cannot_be_forged(auth_client, user, other_user):
     response = auth_client.post(URL, {"company": "X", "position": "Y", "user": other_user.pk})
     assert response.status_code == 201
     assert Application.objects.get(pk=response.json()["id"]).user == user
+
+
+@pytest.mark.django_db
+def test_vacancy_can_be_saved_only_once(auth_client):
+    data = {"company": "Kapital Bank", "position": "QA Engineer", "vacancy_uid": "boss.az:123"}
+    assert auth_client.post(URL, data).status_code == 201
+
+    response = auth_client.post(URL, data)
+    assert response.status_code == 400
+    assert response.json()["vacancy_uid"] == ["You already saved this vacancy."]
+
+
+@pytest.mark.django_db
+def test_same_vacancy_for_two_users(auth_client, other_user):
+    make(other_user, vacancy_uid="boss.az:123")
+    response = auth_client.post(
+        URL, {"company": "Kapital Bank", "position": "QA Engineer", "vacancy_uid": "boss.az:123"}
+    )
+    assert response.status_code == 201
+
+
+@pytest.mark.django_db
+def test_editing_a_saved_vacancy_keeps_its_uid(auth_client, user):
+    application = make(user, vacancy_uid="boss.az:123")
+    response = auth_client.patch(
+        f"{URL}{application.pk}/", {"status": "interview", "vacancy_uid": "boss.az:123"}
+    )
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_many_applications_without_a_vacancy(auth_client):
+    for _ in range(2):
+        assert auth_client.post(URL, {"company": "Leops", "position": "Dev"}).status_code == 201

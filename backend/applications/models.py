@@ -22,11 +22,19 @@ class Application(models.Model):
     currency = models.CharField(max_length=3, default="AZN")
     url = models.URLField(max_length=500, blank=True)
     notes = models.TextField(blank=True)
+    vacancy_uid = models.CharField(max_length=200, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["-applied_on", "-created_at"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "vacancy_uid"],
+                condition=~models.Q(vacancy_uid=""),
+                name="one_application_per_vacancy",
+            )
+        ]
 
     def __str__(self):
         return f"{self.position} at {self.company}"
