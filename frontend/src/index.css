@@ -324,3 +324,7 @@ a {
   cursor: grab;
   font-size: 14px;
 }
+
+.small {
+  font-size: 0.85em;
+}

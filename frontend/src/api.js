@@ -114,3 +114,14 @@ export function updateApplication(id, data) {
 export function deleteApplication(id) {
   return request(`/api/applications/${id}/`, { method: 'DELETE' })
 }
+
+export function listVacancies({ q, category, page = 1 } = {}) {
+  const params = new URLSearchParams({ page })
+  if (q) params.set('q', q)
+  if (category) params.set('category', category)
+  return request(`/api/vacancies/?${params}`)
+}
+
+export function getRates() {
+  return request('/api/rates/')
+}

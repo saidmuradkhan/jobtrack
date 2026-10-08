@@ -44,3 +44,17 @@ describe('ApplicationList', () => {
     expect(screen.getByText('No applications found.')).toBeInTheDocument()
   })
 })
+
+describe('ApplicationList with exchange rates', () => {
+  it('shows the salary in dollars too', () => {
+    render(
+      <ApplicationList
+        applications={[application]}
+        rates={{ USD: 1.7 }}
+        onEdit={vi.fn()}
+        onDelete={vi.fn()}
+      />,
+    )
+    expect(screen.getByText('≈ $1,765')).toBeInTheDocument()
+  })
+})

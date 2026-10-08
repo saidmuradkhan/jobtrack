@@ -1,7 +1,8 @@
 import { useState } from 'react'
+import { convertedSalary } from '../rates.js'
 import { STATUSES, formatSalary } from '../statuses.js'
 
-export default function KanbanBoard({ applications, onEdit, onMove }) {
+export default function KanbanBoard({ applications, rates, onEdit, onMove }) {
   const [dropTarget, setDropTarget] = useState(null)
 
   function handleDrop(event, status) {
@@ -44,6 +45,11 @@ export default function KanbanBoard({ applications, onEdit, onMove }) {
                 <span className="muted">
                   {application.applied_on} · {formatSalary(application)}
                 </span>
+                {application.salary != null && rates && (
+                  <span className="muted small">
+                    {convertedSalary(application.salary, application.currency, rates)}
+                  </span>
+                )}
               </article>
             ))}
           </section>

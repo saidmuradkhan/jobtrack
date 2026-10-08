@@ -1,6 +1,7 @@
+import { convertedSalary } from '../rates.js'
 import { formatSalary, statusLabel } from '../statuses.js'
 
-export default function ApplicationList({ applications, onEdit, onDelete }) {
+export default function ApplicationList({ applications, rates, onEdit, onDelete }) {
   if (applications.length === 0) {
     return <p className="card muted">No applications found.</p>
   }
@@ -37,7 +38,12 @@ export default function ApplicationList({ applications, onEdit, onDelete }) {
                 </span>
               </td>
               <td>{application.applied_on}</td>
-              <td>{formatSalary(application)}</td>
+              <td>
+                {formatSalary(application)}
+                <div className="muted small">
+                  {convertedSalary(application.salary, application.currency, rates)}
+                </div>
+              </td>
               <td className="actions">
                 <button onClick={() => onEdit(application)}>Edit</button>
                 <button className="danger" onClick={() => onDelete(application)}>

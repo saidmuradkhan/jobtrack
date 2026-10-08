@@ -5,6 +5,7 @@ import {
   listApplications,
   updateApplication,
 } from '../api.js'
+import { useRates } from '../rates.js'
 import { STATUSES } from '../statuses.js'
 import ApplicationForm from './ApplicationForm.jsx'
 import ApplicationList from './ApplicationList.jsx'
@@ -19,6 +20,7 @@ export default function Dashboard() {
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState('')
   const [reloadCount, setReloadCount] = useState(0)
+  const rates = useRates()
 
   useEffect(() => {
     let ignore = false
@@ -109,11 +111,17 @@ export default function Dashboard() {
       ) : view === 'list' ? (
         <ApplicationList
           applications={applications}
+          rates={rates}
           onEdit={setEditing}
           onDelete={handleDelete}
         />
       ) : (
-        <KanbanBoard applications={applications} onEdit={setEditing} onMove={handleMove} />
+        <KanbanBoard
+          applications={applications}
+          rates={rates}
+          onEdit={setEditing}
+          onMove={handleMove}
+        />
       )}
 
       {editing && (
