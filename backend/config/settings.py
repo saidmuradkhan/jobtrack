@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "accounts",
     "applications",
+    "integrations",
 ]
 
 MIDDLEWARE = [
@@ -96,3 +97,6 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
 }
+
+RADAR_API_URL = os.environ.get("RADAR_API_URL", "https://radar.saidmuradkhan.dev")
+RATES_API_URL = os.environ.get("RATES_API_URL", "https://rates.saidmuradkhan.dev")

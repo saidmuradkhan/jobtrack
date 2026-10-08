@@ -1,0 +1,52 @@
+{
+  "count": 2,
+  "page": 1,
+  "items": [
+    {
+      "uid": "boss.az:301245",
+      "source": "boss.az",
+      "title": "Python developer",
+      "company": "Kapital Bank",
+      "url": "https://boss.az/vacancies/301245",
+      "location": "Bakı",
+      "published_on": "2026-10-07",
+      "salary_min": 2000.0,
+      "salary_max": 3000.0,
+      "currency": "AZN",
+      "category": "it",
+      "tags": ["python", "django", "postgresql"],
+      "languages": ["english"],
+      "experience_years": 2,
+      "seniority": "middle",
+      "work_mode": "office",
+      "employment_type": "full_time",
+      "higher_education": true,
+      "also_on": [{"source": "hellojob.az", "url": "https://www.hellojob.az/vakansiya/1"}]
+    },
+    {
+      "uid": "jobsearch.az:88812",
+      "source": "jobsearch.az",
+      "title": "Frontend developer",
+      "company": "Azercell",
+      "url": "https://jobsearch.az/vacancies/88812",
+      "location": "Bakı",
+      "published_on": "2026-10-06",
+      "salary_min": null,
+      "salary_max": null,
+      "currency": "AZN",
+      "category": "it",
+      "tags": ["react", "typescript"],
+      "languages": [],
+      "experience_years": null,
+      "seniority": null,
+      "work_mode": "hybrid",
+      "employment_type": "full_time",
+      "higher_education": false,
+      "also_on": []
+    }
+  ],
+  "facets": {
+    "category": [["it", 2]],
+    "tags": [["python", 1], ["react", 1]]
+  }
+}

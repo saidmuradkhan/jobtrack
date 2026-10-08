@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-08",
+  "base": "AZN",
+  "rates": [
+    {"code": "EUR", "name": "1 Avro", "nominal": 1, "value": 1.9048, "per_unit": 1.9048},
+    {"code": "GBP", "name": "1 Britaniya funt sterlinqi", "nominal": 1, "value": 2.2455, "per_unit": 2.2455},
+    {"code": "TRY", "name": "1 Türkiyə lirəsi", "nominal": 1, "value": 0.0398, "per_unit": 0.0398},
+    {"code": "USD", "name": "1 ABŞ dolları", "nominal": 1, "value": 1.7, "per_unit": 1.7}
+  ]
+}
