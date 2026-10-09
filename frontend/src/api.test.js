@@ -52,4 +52,21 @@ describe('api', () => {
     await expect(listApplications()).rejects.toThrow('Token expired')
     expect(getTokens()).toBeNull()
   })
+
+  it('sends the browser to the preview login while the site is private', async () => {
+    const assign = vi.fn()
+    vi.stubGlobal('location', { href: 'https://jobs.example.dev/', assign })
+    localStorage.setItem('jobtrack.tokens', JSON.stringify({ access: 'a1', refresh: 'r1' }))
+    fetch.mockReturnValueOnce(
+      reply(401, { detail: 'Preview login required.', preview_login: 'https://api.example.dev/preview/login' }),
+    )
+
+    await expect(listApplications()).rejects.toThrow('Preview login required.')
+
+    expect(assign).toHaveBeenCalledWith(
+      'https://api.example.dev/preview/login?next=https%3A%2F%2Fjobs.example.dev%2F',
+    )
+    expect(fetch).toHaveBeenCalledTimes(1)
+    expect(getTokens()).toEqual({ access: 'a1', refresh: 'r1' })
+  })
 })

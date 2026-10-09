@@ -42,8 +42,13 @@ async function send(path, { method = 'GET', body, token } = {}) {
     method,
     headers,
     body: body === undefined ? undefined : JSON.stringify(body),
+    credentials: 'include',
   })
   const data = response.status === 204 ? null : await response.json().catch(() => null)
+  if (response.status === 401 && data?.preview_login) {
+    // The site is still private: log in on the preview page, then come back here.
+    window.location.assign(`${data.preview_login}?next=${encodeURIComponent(window.location.href)}`)
+  }
   if (!response.ok) throw new ApiError(response.status, data)
   return data
 }
@@ -68,7 +73,7 @@ async function request(path, options = {}) {
   try {
     return await send(path, { ...options, token: getTokens()?.access })
   } catch (error) {
-    if (error.status !== 401) throw error
+    if (error.status !== 401 || error.data?.preview_login) throw error
     const access = await refreshAccessToken()
     if (!access) throw error
     return send(path, { ...options, token: access })
