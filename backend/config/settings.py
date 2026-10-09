@@ -25,10 +25,12 @@ INSTALLED_APPS = [
     "accounts",
     "applications",
     "integrations",
+    "preview",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "preview.middleware.PreviewGateMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -100,3 +102,6 @@ SIMPLE_JWT = {
 
 RADAR_API_URL = os.environ.get("RADAR_API_URL", "https://radar.saidmuradkhan.dev")
 RATES_API_URL = os.environ.get("RATES_API_URL", "https://rates.saidmuradkhan.dev")
+
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "")
+PREVIEW_COOKIE_DOMAIN = os.environ.get("PREVIEW_COOKIE_DOMAIN", "")

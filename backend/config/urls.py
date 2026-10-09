@@ -10,6 +10,7 @@ def health(request):
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("health", health),
+    path("preview/", include("preview.urls")),
     path("api/auth/", include("accounts.urls")),
     path("api/", include("applications.urls")),
     path("api/", include("integrations.urls")),
