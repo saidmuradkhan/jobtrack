@@ -12,7 +12,7 @@ and track every application from "applied" to "offer". Salaries are converted wi
 ## Tech stack
 
 - **Backend:** Django · Django REST Framework · JWT auth · PostgreSQL
-- **Frontend:** React (Vite)
+- **Frontend:** React (Vite) · Vitest · Testing Library
 - **Infra:** Docker Compose · GitHub Actions
 
 ## Backend API
@@ -26,11 +26,40 @@ and track every application from "applied" to "offer". Salaries are converted wi
 | GET | `/api/auth/me/` | Current user |
 | GET, POST | `/api/applications/` | List / create your applications |
 | GET, PATCH, PUT, DELETE | `/api/applications/{id}/` | One application |
+| GET | `/api/vacancies/?q=&category=&page=` | Vacancies from az-job-radar, 20 per page, with `saved` for the ones you already track |
+| GET | `/api/rates/` | Official CBAR rates from cbar-rates (`per_unit` in AZN), cached for an hour |
 
 List filters: `?status=interview`, `?search=python` (company, position, notes),
 `?ordering=-applied_on` (`applied_on`, `company`, `salary`, `created_at`).
 Every request except register/login needs `Authorization: Bearer <access>`,
 and each user only ever sees their own applications.
+
+Saving a vacancy creates a `wishlist` application with its `vacancy_uid`; the same
+vacancy can't be saved twice by one user.
+
+## How the three services talk
+
+```
+browser ──► jobtrack frontend ──► jobtrack API ──► az-job-radar  /vacancies
+                                              └──► cbar-rates    /rates
+```
+
+The browser only talks to the jobtrack API. The API calls the other two services
+server-side and sends `X-Preview-Token`, so the shared secret never reaches the browser.
+
+## Configuration
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `RADAR_API_URL` | `https://radar.saidmuradkhan.dev` | az-job-radar base URL |
+| `RATES_API_URL` | `https://rates.saidmuradkhan.dev` | cbar-rates base URL |
+| `PREVIEW_USER`, `PREVIEW_PASSWORD` | — | Preview login. If either is missing, the site is public. |
+| `PREVIEW_SECRET` | — | Signs the preview cookie and is sent as `X-Preview-Token` to the other services (same value everywhere) |
+| `FRONTEND_URL` | — | Where the preview login may send people back to, e.g. `https://jobs.saidmuradkhan.dev` |
+| `PREVIEW_COOKIE_DOMAIN` | — | e.g. `.saidmuradkhan.dev`, so the frontend's requests carry the preview cookie |
+
+While the preview login is on, `/health` stays open, the API answers `401` with a
+`preview_login` link and the frontend sends the browser there.
 
 ## Run the backend locally
 
@@ -53,6 +82,7 @@ With the backend running on `127.0.0.1:8000`:
 cd frontend
 npm install
 npm run dev        # http://localhost:5173, /api is proxied to the backend
+npm test           # Vitest + Testing Library
 npm run lint
 npm run build
 ```
@@ -60,6 +90,10 @@ npm run build
 Sign up, then add applications from the list view or drag cards between
 columns on the board view to change their status.
 For a deployed build, set `VITE_API_URL` to the backend URL.
+
+The Vacancies tab needs az-job-radar: either set `PREVIEW_SECRET` for the backend
+(the live sites are behind the preview login) or point `RADAR_API_URL` and
+`RATES_API_URL` at locally running copies.
 
 ## Structure
 
@@ -80,8 +114,10 @@ jobtrack/
 - [x] API tests (pytest-django) + CI
 - [x] React frontend: login, applications list, add/edit form
 - [x] Kanban board view by status, filter and search
-- [ ] Import vacancies from az-job-radar API
-- [ ] Salary conversion via cbar-rates
+- [x] Frontend tests (Vitest + Testing Library) in CI
+- [x] Browse az-job-radar vacancies and save one as an application in a click
+- [x] Salaries shown in AZN and USD with official rates from cbar-rates
+- [x] Preview login (signed cookie) until review
 - [ ] PostgreSQL + Docker Compose
 - [ ] Deploy
 
