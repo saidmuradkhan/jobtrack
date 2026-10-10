@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { getMe, getTokens, logout } from './api.js'
 import AuthForm from './components/AuthForm.jsx'
 import Dashboard from './components/Dashboard.jsx'
+import Inbox from './components/Inbox.jsx'
 import Vacancies from './components/Vacancies.jsx'
 
 export default function App() {
@@ -48,13 +49,18 @@ export default function App() {
           >
             Vacancies
           </button>
+          <button className={tab === 'inbox' ? 'active' : ''} onClick={() => setTab('inbox')}>
+            Email updates
+          </button>
         </nav>
         <div className="row">
           <span className="muted">{user.username}</span>
           <button onClick={handleLogout}>Log out</button>
         </div>
       </header>
-      {tab === 'applications' ? <Dashboard /> : <Vacancies />}
+      {tab === 'applications' && <Dashboard />}
+      {tab === 'vacancies' && <Vacancies />}
+      {tab === 'inbox' && <Inbox />}
     </div>
   )
 }
