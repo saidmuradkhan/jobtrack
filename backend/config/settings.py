@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     "accounts",
     "applications",
     "integrations",
+    "inbox",
     "preview",
 ]
 
@@ -105,3 +106,5 @@ RATES_API_URL = os.environ.get("RATES_API_URL", "https://rates.saidmuradkhan.dev
 
 FRONTEND_URL = os.environ.get("FRONTEND_URL", "")
 PREVIEW_COOKIE_DOMAIN = os.environ.get("PREVIEW_COOKIE_DOMAIN", "")
+
+INBOX_DOMAIN = os.environ.get("INBOX_DOMAIN", "in.jobs.saidmuradkhan.dev")
