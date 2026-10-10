@@ -80,7 +80,7 @@ def apply_to_applications(record, user, email):
         return
     if not found:
         if record.status == "applied":
-            record.application = create_application(record, email)
+            record.application = create_application(record, email.sent_at)
             record.outcome = Outcome.CREATED
         else:
             record.outcome = Outcome.PENDING
@@ -100,13 +100,18 @@ def apply_to_applications(record, user, email):
         record.outcome = Outcome.PENDING
 
 
-def create_application(record, email):
-    applied_on = email.sent_at.date() if email.sent_at else timezone.localdate()
+def create_application(record, sent_at=None):
+    if sent_at is None:
+        applied_on = timezone.localdate()
+    elif timezone.is_naive(sent_at):
+        applied_on = sent_at.date()
+    else:
+        applied_on = timezone.localdate(sent_at)
     return Application.objects.create(
         user=record.user,
         company=record.company,
         position=record.position or "Unknown position",
-        status=Application.Status.APPLIED,
+        status=record.status,
         applied_on=applied_on,
         notes=f"Added from an email: {record.subject}",
     )
