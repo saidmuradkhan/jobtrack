@@ -348,3 +348,69 @@ a {
 .vacancy button {
   flex-shrink: 0;
 }
+
+.inbox {
+  display: grid;
+  gap: 20px;
+}
+
+.inbox h3 {
+  margin-bottom: 10px;
+}
+
+.inbox code {
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  overflow-wrap: anywhere;
+}
+
+.inbox details {
+  margin-top: 14px;
+}
+
+.inbox summary {
+  cursor: pointer;
+  color: var(--accent);
+}
+
+.inbox ol li {
+  margin-bottom: 8px;
+}
+
+.notice {
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fff1cc;
+  color: #6b4600;
+}
+
+.emails {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.email {
+  padding: 14px 16px;
+}
+
+.email p {
+  margin: 8px 0;
+}
+
+.email .row {
+  margin-top: 10px;
+}
+
+.email select {
+  max-width: 100%;
+}
+
+.email.ignored,
+.email.dismissed {
+  opacity: 0.6;
+}
