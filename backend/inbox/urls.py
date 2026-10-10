@@ -4,4 +4,5 @@ from . import views
 
 urlpatterns = [
     path("inbox/", views.inbox, name="inbox"),
+    path("inbox/receive/", views.receive, name="inbox-receive"),
 ]

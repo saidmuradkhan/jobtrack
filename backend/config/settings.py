@@ -108,3 +108,4 @@ FRONTEND_URL = os.environ.get("FRONTEND_URL", "")
 PREVIEW_COOKIE_DOMAIN = os.environ.get("PREVIEW_COOKIE_DOMAIN", "")
 
 INBOX_DOMAIN = os.environ.get("INBOX_DOMAIN", "in.jobs.saidmuradkhan.dev")
+INBOX_WEBHOOK_SECRET = os.environ.get("INBOX_WEBHOOK_SECRET", "")

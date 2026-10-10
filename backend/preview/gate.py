@@ -48,7 +48,10 @@ def cookie_is_valid(value):
 def allows(request):
     if credentials() is None:
         return True
-    if request.path in {"/health", "/preview/login"} or request.method == "OPTIONS":
+    # The inbox webhook has its own secret, mail providers cannot log in.
+    if request.path in {"/health", "/preview/login", "/api/inbox/receive/"}:
+        return True
+    if request.method == "OPTIONS":
         return True
     token = request.headers.get("X-Preview-Token", "")
     if token and hmac.compare_digest(token.encode(), secret().encode()):
