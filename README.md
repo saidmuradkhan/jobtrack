@@ -28,6 +28,10 @@ and track every application from "applied" to "offer". Salaries are converted wi
 | GET, PATCH, PUT, DELETE | `/api/applications/{id}/` | One application |
 | GET | `/api/vacancies/?q=&category=&page=` | Vacancies from az-job-radar, 20 per page, with `saved` for the ones you already track |
 | GET | `/api/rates/` | Official CBAR rates from cbar-rates (`per_unit` in AZN), cached for an hour |
+| GET | `/api/inbox/` | Your forwarding address, the Gmail confirmation code and recent email updates |
+| POST | `/api/inbox/emails/{id}/accept/` | Apply an unsure email: to `application` (id) or as a new application |
+| POST | `/api/inbox/emails/{id}/dismiss/` | Ignore an unsure email |
+| POST | `/api/inbox/receive/` | Webhook for the mail provider (raw email, `X-Inbox-Secret`, `X-Inbox-To`) |
 
 List filters: `?status=interview`, `?search=python` (company, position, notes),
 `?ordering=-applied_on` (`applied_on`, `company`, `salary`, `created_at`).
@@ -36,6 +40,40 @@ and each user only ever sees their own applications.
 
 Saving a vacancy creates a `wishlist` application with its `vacancy_uid`; the same
 vacancy can't be saved twice by one user.
+
+## Email updates
+
+Every user gets a private address like `said-ab12cd34ef@in.jobs.saidmuradkhan.dev`.
+A Gmail filter forwards job emails there (the "Email updates" tab shows the filter and the
+setup steps), so nobody has to connect their whole mailbox and there is no Google app review.
+
+```
+Gmail filter ──► Cloudflare Email Routing ──► deploy/email-worker.js ──► POST /api/inbox/receive/
+```
+
+For each email the API (`backend/inbox/`):
+
+1. reads the sender, subject and text (`reading.py`),
+2. decides what it is with simple rules in English, Azerbaijani and Russian (`classify.py`):
+   application sent, interview, offer, rejection, the Gmail forwarding code, or not about a job,
+3. finds the company and position (LinkedIn, Greenhouse and similar emails, or the sender's name),
+4. matches it to your applications by company (`"ACME BANK LLC"` = `"Acme Bank"`) and
+   position, and moves the status forward (`processing.py`). A late "thanks for applying" never
+   undoes an interview.
+
+A confirmation for a company you don't track yet adds a new application. Anything unclear,
+such as an offer from an unknown company or two applications at the same company, waits under
+"Please check" until you confirm or dismiss it. Older emails are not imported: add those
+applications by hand once and later emails keep them up to date.
+
+Only the subject, the sender, the first 280 characters and what was found are stored, never the
+full email. Emails that are not about a job keep just the sender and subject.
+
+Try it locally without any mail setup:
+
+```bash
+python manage.py receive_email tests/fixtures/emails/interview_az.eml --user said
+```
 
 ## How the three services talk
 
@@ -57,6 +95,8 @@ server-side and sends `X-Preview-Token`, so the shared secret never reaches the 
 | `PREVIEW_SECRET` | — | Signs the preview cookie and is sent as `X-Preview-Token` to the other services (same value everywhere) |
 | `FRONTEND_URL` | — | Where the preview login may send people back to, e.g. `https://jobs.saidmuradkhan.dev` |
 | `PREVIEW_COOKIE_DOMAIN` | — | e.g. `.saidmuradkhan.dev`, so the frontend's requests carry the preview cookie |
+| `INBOX_DOMAIN` | `in.jobs.saidmuradkhan.dev` | Domain of the forwarding addresses |
+| `INBOX_WEBHOOK_SECRET` | — | Shared with the email worker. Without it the webhook is off (`503`). |
 
 While the preview login is on, `/health` stays open, the API answers `401` with a
 `preview_login` link and the frontend sends the browser there.
@@ -100,7 +140,8 @@ The Vacancies tab needs az-job-radar: either set `PREVIEW_SECRET` for the backen
 ```
 jobtrack/
 ├── backend/    # Django + DRF API
-└── frontend/   # React (Vite) app
+├── frontend/   # React (Vite) app
+└── deploy/     # Cloudflare Email Worker for email updates
 ```
 
 ## Roadmap
@@ -118,6 +159,7 @@ jobtrack/
 - [x] Browse az-job-radar vacancies and save one as an application in a click
 - [x] Salaries shown in AZN and USD with official rates from cbar-rates
 - [x] Preview login (signed cookie) until review
+- [x] Email updates: forward job emails, statuses change by themselves
 - [ ] PostgreSQL + Docker Compose
 - [ ] Deploy
 
