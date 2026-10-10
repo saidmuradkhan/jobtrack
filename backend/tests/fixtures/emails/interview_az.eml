@@ -1,0 +1,24 @@
+From: =?utf-8?b?QWNtZSBCYW5rIEhS?= <hr@acmebank.az>
+To: said.example@gmail.com
+Subject: =?utf-8?b?TcO8c2FoaWLJmSBkyZl2yZl0aQ==?=
+Message-ID: <acme-003@acmebank.az>
+Date: Mon, 12 Oct 2026 09:30:00 +0400
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="b1"
+
+--b1
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+Hörmətli Said,
+
+Backend Developer vakansiyası üzrə müraciətinizə baxıldı. Sizi 15 oktyabr saat 11:00-da
+müsahibəyə dəvət edirik.
+
+Hörmətlə,
+Acme Bank HR
+--b1
+Content-Type: text/html; charset="utf-8"
+
+<p>Hörmətli Said,</p><p>Sizi müsahibəyə dəvət edirik.</p>
+--b1--

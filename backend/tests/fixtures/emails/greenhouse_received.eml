@@ -1,0 +1,14 @@
+From: Northwind Recruiting <no-reply@us.greenhouse-mail.io>
+To: said.example@gmail.com
+Subject: Thank you for applying to Northwind
+Message-ID: <gh-002@greenhouse-mail.io>
+Date: Sat, 10 Oct 2026 08:00:00 +0000
+MIME-Version: 1.0
+Content-Type: text/html; charset="utf-8"
+
+<html><head><style>p { color: #333; }</style></head><body>
+<p>Hi Said,</p>
+<p>Thank you for applying for the <b>Senior Python Engineer</b> position at Northwind.
+We have received your application and our team will review it shortly.</p>
+<p>Best regards,<br>Northwind Talent Team</p>
+</body></html>
