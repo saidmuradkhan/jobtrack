@@ -81,7 +81,7 @@ def dismiss(request, pk):
 
 
 def inbox_for(recipient):
-    """'said-ab12cd34ef@in.jobs...' belongs to the inbox with the key 'ab12cd34ef'."""
+    """'jobs+said-ab12cd34ef@...' belongs to the inbox with the key 'ab12cd34ef'."""
     local_part = recipient.strip().lower().partition("@")[0]
     key = local_part.rpartition("-")[2]
     return Inbox.objects.select_related("user").filter(key=key).first() if key else None

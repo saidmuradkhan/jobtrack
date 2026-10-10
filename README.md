@@ -43,12 +43,12 @@ vacancy can't be saved twice by one user.
 
 ## Email updates
 
-Every user gets a private address like `said-ab12cd34ef@in.jobs.saidmuradkhan.dev`.
+Every user gets a private address like `jobs+said-ab12cd34ef@saidmuradkhan.dev`.
 A Gmail filter forwards job emails there (the "Email updates" tab shows the filter and the
 setup steps), so nobody has to connect their whole mailbox and there is no Google app review.
 
 ```
-Gmail filter ──► Cloudflare Email Routing ──► deploy/email-worker.js ──► POST /api/inbox/receive/
+Gmail filter ──► Cloudflare Email Routing (rule for jobs@, subaddressing on) ──► deploy/email-worker.js ──► POST /api/inbox/receive/
 ```
 
 For each email the API (`backend/inbox/`):
@@ -95,7 +95,7 @@ server-side and sends `X-Preview-Token`, so the shared secret never reaches the 
 | `PREVIEW_SECRET` | — | Signs the preview cookie and is sent as `X-Preview-Token` to the other services (same value everywhere) |
 | `FRONTEND_URL` | — | Where the preview login may send people back to, e.g. `https://jobs.saidmuradkhan.dev` |
 | `PREVIEW_COOKIE_DOMAIN` | — | e.g. `.saidmuradkhan.dev`, so the frontend's requests carry the preview cookie |
-| `INBOX_DOMAIN` | `in.jobs.saidmuradkhan.dev` | Domain of the forwarding addresses |
+| `INBOX_ADDRESS` | `jobs@saidmuradkhan.dev` | Mailbox the forwarding addresses are built on (`jobs+<user>-<key>@...`) |
 | `INBOX_WEBHOOK_SECRET` | — | Shared with the email worker. Without it the webhook is off (`503`). |
 
 While the preview login is on, `/health` stays open, the API answers `401` with a

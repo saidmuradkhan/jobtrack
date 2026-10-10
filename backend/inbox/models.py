@@ -25,7 +25,9 @@ class Inbox(models.Model):
     def address(self):
         # Usernames may contain "@" or "+", which do not belong in an address.
         name = re.sub(r"[^a-z0-9]", "", self.user.username.lower())[:20] or "user"
-        return f"{name}-{self.key}@{settings.INBOX_DOMAIN}"
+        # One mailbox for everyone, the part after "+" says whose email it is.
+        mailbox, _, domain = settings.INBOX_ADDRESS.partition("@")
+        return f"{mailbox}+{name}-{self.key}@{domain}"
 
 
 class InboundEmail(models.Model):

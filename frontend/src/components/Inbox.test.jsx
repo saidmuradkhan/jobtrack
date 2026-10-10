@@ -41,7 +41,7 @@ const interview = {
 
 function inbox(overrides = {}) {
   return {
-    address: 'said-ab12cd34ef@in.jobs.saidmuradkhan.dev',
+    address: 'jobs+said-ab12cd34ef@saidmuradkhan.dev',
     forwarding_confirmation: null,
     pending: 1,
     emails: [offer, interview],
@@ -60,7 +60,7 @@ describe('Inbox', () => {
 
   it('shows the address, what changed and what needs a look', async () => {
     render(<Inbox />)
-    expect(await screen.findByText('said-ab12cd34ef@in.jobs.saidmuradkhan.dev')).toBeInTheDocument()
+    expect(await screen.findByText('jobs+said-ab12cd34ef@saidmuradkhan.dev')).toBeInTheDocument()
     expect(screen.getByText('Backend Developer at Acme Bank: Applied → Interview')).toBeInTheDocument()
     expect(screen.getByText('Please check (1)')).toBeInTheDocument()
     expect(screen.getByText('Data Engineer at Contoso → Offer')).toBeInTheDocument()

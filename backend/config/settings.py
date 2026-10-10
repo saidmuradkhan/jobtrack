@@ -107,5 +107,5 @@ RATES_API_URL = os.environ.get("RATES_API_URL", "https://rates.saidmuradkhan.dev
 FRONTEND_URL = os.environ.get("FRONTEND_URL", "")
 PREVIEW_COOKIE_DOMAIN = os.environ.get("PREVIEW_COOKIE_DOMAIN", "")
 
-INBOX_DOMAIN = os.environ.get("INBOX_DOMAIN", "in.jobs.saidmuradkhan.dev")
+INBOX_ADDRESS = os.environ.get("INBOX_ADDRESS", "jobs@saidmuradkhan.dev")
 INBOX_WEBHOOK_SECRET = os.environ.get("INBOX_WEBHOOK_SECRET", "")

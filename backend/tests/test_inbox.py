@@ -15,12 +15,12 @@ def test_inbox_requires_login(client):
 
 @pytest.mark.django_db
 def test_each_user_gets_one_private_address(auth_client, user, settings):
-    settings.INBOX_DOMAIN = "in.example.test"
+    settings.INBOX_ADDRESS = "jobs@example.test"
     first = auth_client.get(URL).json()["address"]
     second = auth_client.get(URL).json()["address"]
     assert first == second
-    assert first.startswith("said-")
-    assert first.endswith("@in.example.test")
+    assert first.startswith("jobs+said-")
+    assert first.endswith("@example.test")
     assert Inbox.objects.filter(user=user).count() == 1
 
 
@@ -34,10 +34,10 @@ def test_addresses_are_hard_to_guess(user, other_user):
 
 @pytest.mark.django_db
 def test_address_keeps_only_safe_characters(django_user_model, settings):
-    settings.INBOX_DOMAIN = "in.example.test"
+    settings.INBOX_ADDRESS = "jobs@example.test"
     odd = django_user_model.objects.create_user(username="Said.M+jobs@home", password="x")
     box = Inbox.objects.create(user=odd, key="abc123")
-    assert box.address == "saidmjobshome-abc123@in.example.test"
+    assert box.address == "jobs+saidmjobshome-abc123@example.test"
 
 
 RECEIVE = "/api/inbox/receive/"
@@ -83,7 +83,7 @@ def test_webhook_is_off_without_a_secret(client, user):
 
 @pytest.mark.django_db
 def test_unknown_address_is_refused(client, webhook):
-    assert post_email(client, "offer.eml", "said-0000000000@in.example").status_code == 404
+    assert post_email(client, "offer.eml", "jobs+said-0000000000@example.test").status_code == 404
 
 
 @pytest.mark.django_db
