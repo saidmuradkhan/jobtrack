@@ -130,3 +130,16 @@ export function listVacancies({ q, category, page = 1 } = {}) {
 export function getRates() {
   return request('/api/rates/')
 }
+
+export function getInbox() {
+  return request('/api/inbox/')
+}
+
+export function acceptEmail(id, applicationId) {
+  const body = applicationId ? { application: applicationId } : {}
+  return request(`/api/inbox/emails/${id}/accept/`, { method: 'POST', body })
+}
+
+export function dismissEmail(id) {
+  return request(`/api/inbox/emails/${id}/dismiss/`, { method: 'POST' })
+}
