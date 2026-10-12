@@ -41,3 +41,9 @@ def test_postgres_from_database_url():
     assert db["NAME"] == "jobtrack"
     assert db["OPTIONS"]["sslmode"] == "require"
     assert db["DISABLE_SERVER_SIDE_CURSORS"] is True
+
+
+def test_cors_allows_only_the_frontend():
+    found = load_settings(["CORS_ALLOWED_ORIGINS"], FRONTEND_URL="https://jobs.example.dev/")
+    assert found["CORS_ALLOWED_ORIGINS"] == ["https://jobs.example.dev"]
+    assert load_settings(["CORS_ALLOWED_ORIGINS"])["CORS_ALLOWED_ORIGINS"] == []

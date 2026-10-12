@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "corsheaders",
     "rest_framework",
     "accounts",
     "applications",
@@ -33,6 +34,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "preview.middleware.PreviewGateMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -112,6 +114,10 @@ RADAR_API_URL = os.environ.get("RADAR_API_URL", "https://radar.saidmuradkhan.dev
 RATES_API_URL = os.environ.get("RATES_API_URL", "https://rates.saidmuradkhan.dev")
 
 FRONTEND_URL = os.environ.get("FRONTEND_URL", "")
+
+# The frontend lives on its own subdomain and sends the preview cookie along.
+CORS_ALLOWED_ORIGINS = [FRONTEND_URL.rstrip("/")] if FRONTEND_URL else []
+CORS_ALLOW_CREDENTIALS = True
 PREVIEW_COOKIE_DOMAIN = os.environ.get("PREVIEW_COOKIE_DOMAIN", "")
 
 INBOX_ADDRESS = os.environ.get("INBOX_ADDRESS", "jobs@saidmuradkhan.dev")
