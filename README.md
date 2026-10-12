@@ -13,7 +13,7 @@ and track every application from "applied" to "offer". Salaries are converted wi
 
 - **Backend:** Django · Django REST Framework · JWT auth · PostgreSQL
 - **Frontend:** React (Vite) · Vitest · Testing Library
-- **Infra:** Docker Compose · GitHub Actions
+- **Infra:** Vercel · Neon Postgres · GitHub Actions
 
 ## Backend API
 
@@ -89,11 +89,15 @@ server-side and sends `X-Preview-Token`, so the shared secret never reaches the 
 
 | Variable | Default | Purpose |
 |---|---|---|
+| `DATABASE_URL` | local SQLite | Postgres link, e.g. the one Neon gives on Vercel |
+| `DJANGO_SECRET_KEY` | dev-only key | Required when debug is off |
+| `DJANGO_DEBUG` | `1` locally, `0` on Vercel | Debug pages and errors |
+| `DJANGO_ALLOWED_HOSTS` | `localhost,127.0.0.1` | Comma separated, e.g. `jobs-api.saidmuradkhan.dev` |
 | `RADAR_API_URL` | `https://radar.saidmuradkhan.dev` | az-job-radar base URL |
 | `RATES_API_URL` | `https://rates.saidmuradkhan.dev` | cbar-rates base URL |
 | `PREVIEW_USER`, `PREVIEW_PASSWORD` | — | Preview login. If either is missing, the site is public. |
 | `PREVIEW_SECRET` | — | Signs the preview cookie and is sent as `X-Preview-Token` to the other services (same value everywhere) |
-| `FRONTEND_URL` | — | Where the preview login may send people back to, e.g. `https://jobs.saidmuradkhan.dev` |
+| `FRONTEND_URL` | — | The frontend's address, e.g. `https://jobs.saidmuradkhan.dev`: allowed by CORS and as a place to return to after the preview login |
 | `PREVIEW_COOKIE_DOMAIN` | — | e.g. `.saidmuradkhan.dev`, so the frontend's requests carry the preview cookie |
 | `INBOX_ADDRESS` | `jobs@saidmuradkhan.dev` | Mailbox the forwarding addresses are built on (`jobs+<user>-<key>@...`) |
 | `INBOX_WEBHOOK_SECRET` | — | Shared with the email worker. Without it the webhook is off (`503`). |
@@ -110,6 +114,7 @@ python -m venv .venv
 pip install -r requirements-dev.txt
 python manage.py migrate
 python manage.py createsuperuser   # optional, for /admin
+python manage.py seed_demo         # optional, a "demo" user with sample data
 python manage.py runserver
 pytest
 ```
@@ -134,6 +139,34 @@ For a deployed build, set `VITE_API_URL` to the backend URL.
 The Vacancies tab needs az-job-radar: either set `PREVIEW_SECRET` for the backend
 (the live sites are behind the preview login) or point `RADAR_API_URL` and
 `RATES_API_URL` at locally running copies.
+
+## Demo data
+
+`python manage.py seed_demo` creates a `demo` user with 12 applications in every status and a few
+email updates, one of them waiting under "Please check". The password comes from `--password`,
+then `DEMO_PASSWORD`, otherwise a random one is printed. An existing user's data is only
+replaced with `--reset`.
+
+## Deploy (Vercel + Neon)
+
+Two Vercel projects from this repo:
+
+| Project | Root directory | Domain | Settings |
+|---|---|---|---|
+| API | `backend` | `jobs-api.saidmuradkhan.dev` | Python, entry `index.py` (`vercel.json`) |
+| Frontend | `frontend` | `jobs.saidmuradkhan.dev` | Vite, `VITE_API_URL=https://jobs-api.saidmuradkhan.dev` |
+
+For the API, add a Neon database under Storage (it sets `DATABASE_URL`) and set
+`DJANGO_SECRET_KEY`, `DJANGO_ALLOWED_HOSTS`, `FRONTEND_URL`, `PREVIEW_COOKIE_DOMAIN` and the
+preview and inbox variables above. Debug is off on Vercel unless `DJANGO_DEBUG=1`.
+
+- **Database:** the `Migrate database` workflow runs `migrate` on Neon whenever migrations change
+  (or by hand from the Actions tab). It needs the same `DATABASE_URL` as a GitHub secret and
+  skips itself without it.
+- **CORS:** only `FRONTEND_URL` may call the API, with credentials, so the preview cookie set on
+  `.saidmuradkhan.dev` travels with the frontend's requests.
+- **Static files:** WhiteNoise serves the admin's CSS and JS straight from the installed apps,
+  no `collectstatic` step needed.
 
 ## Structure
 
@@ -160,8 +193,10 @@ jobtrack/
 - [x] Salaries shown in AZN and USD with official rates from cbar-rates
 - [x] Preview login (signed cookie) until review
 - [x] Email updates: forward job emails, statuses change by themselves
-- [ ] PostgreSQL + Docker Compose
-- [ ] Deploy
+- [x] PostgreSQL (Neon) through `DATABASE_URL`, SQLite locally
+- [x] Vercel config: serverless Django, CORS, static files, migrations workflow
+- [x] Demo data command (`seed_demo`)
+- [ ] Deploy to jobs.saidmuradkhan.dev
 
 ## License
 
