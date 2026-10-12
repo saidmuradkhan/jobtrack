@@ -2,6 +2,8 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
+import dj_database_url
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 DEBUG = os.environ.get("DJANGO_DEBUG", "1") == "1"
@@ -59,12 +61,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
+# Neon gives a postgres:// link on Vercel, locally we stay on SQLite.
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    "default": dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=0,
+        conn_health_checks=True,
+    )
 }
+if DATABASES["default"]["ENGINE"] == "django.db.backends.postgresql":
+    # Neon's pooler hands out a different connection per query.
+    DATABASES["default"]["DISABLE_SERVER_SIDE_CURSORS"] = True
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
