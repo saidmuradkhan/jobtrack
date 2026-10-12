@@ -6,7 +6,10 @@ import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = os.environ.get("DJANGO_DEBUG", "1") == "1"
+ON_VERCEL = bool(os.environ.get("VERCEL"))
+
+# Debug stays off on Vercel even if DJANGO_DEBUG is forgotten.
+DEBUG = os.environ.get("DJANGO_DEBUG", "0" if ON_VERCEL else "1") == "1"
 
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "")
 if not SECRET_KEY:
@@ -15,6 +18,8 @@ if not SECRET_KEY:
     SECRET_KEY = "local-development-only-never-use-in-production"
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+if os.environ.get("VERCEL_URL"):
+    ALLOWED_HOSTS.append(os.environ["VERCEL_URL"])
 
 if not DEBUG:
     # Vercel ends HTTPS before Django and says so in this header.

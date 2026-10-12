@@ -4,6 +4,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 BACKEND = Path(__file__).resolve().parent.parent
 
 
@@ -15,7 +17,8 @@ def load_settings(names, **env):
         "django.setup()\n"
         f"print(json.dumps({{n: getattr(settings, n) for n in {names!r}}}, default=str))\n"
     )
-    clean = {k: v for k, v in os.environ.items() if not k.startswith(("DATABASE_", "DJANGO_"))}
+    prefixes = ("DATABASE_", "DJANGO_", "VERCEL")
+    clean = {k: v for k, v in os.environ.items() if not k.startswith(prefixes)}
     result = subprocess.run(
         [sys.executable, "-c", code],
         cwd=BACKEND,
@@ -56,3 +59,21 @@ def test_production_trusts_the_https_header_from_vercel():
     assert found["SECURE_PROXY_SSL_HEADER"] == ["HTTP_X_FORWARDED_PROTO", "https"]
     assert found["SESSION_COOKIE_SECURE"] is True
     assert found["CSRF_COOKIE_SECURE"] is True
+
+
+def test_debug_is_off_on_vercel_by_default():
+    found = load_settings(
+        ["DEBUG", "ALLOWED_HOSTS"],
+        VERCEL="1",
+        VERCEL_URL="jobtrack-abc123.vercel.app",
+        DJANGO_SECRET_KEY="test-only-key",
+        DJANGO_ALLOWED_HOSTS="jobs-api.example.dev",
+    )
+    assert found["DEBUG"] is False
+    assert found["ALLOWED_HOSTS"] == ["jobs-api.example.dev", "jobtrack-abc123.vercel.app"]
+
+
+def test_vercel_refuses_to_start_without_a_secret_key():
+    with pytest.raises(subprocess.CalledProcessError) as error:
+        load_settings(["DEBUG"], VERCEL="1")
+    assert "DJANGO_SECRET_KEY must be set" in error.value.stderr
