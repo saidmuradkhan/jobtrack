@@ -47,3 +47,12 @@ def test_cors_allows_only_the_frontend():
     found = load_settings(["CORS_ALLOWED_ORIGINS"], FRONTEND_URL="https://jobs.example.dev/")
     assert found["CORS_ALLOWED_ORIGINS"] == ["https://jobs.example.dev"]
     assert load_settings(["CORS_ALLOWED_ORIGINS"])["CORS_ALLOWED_ORIGINS"] == []
+
+
+def test_production_trusts_the_https_header_from_vercel():
+    names = ["DEBUG", "SECURE_PROXY_SSL_HEADER", "SESSION_COOKIE_SECURE", "CSRF_COOKIE_SECURE"]
+    found = load_settings(names, DJANGO_DEBUG="0", DJANGO_SECRET_KEY="test-only-key")
+    assert found["DEBUG"] is False
+    assert found["SECURE_PROXY_SSL_HEADER"] == ["HTTP_X_FORWARDED_PROTO", "https"]
+    assert found["SESSION_COOKIE_SECURE"] is True
+    assert found["CSRF_COOKIE_SECURE"] is True
