@@ -12,6 +12,20 @@ and track every application from "applied" to "offer". Salaries are converted wi
 
 > Part of a 3-service system: az-job-radar (Python) · cbar-rates (Go) · **jobtrack** (Django + React)
 
+## Features
+
+- **Applications list and board:** add, edit and search applications, or drag cards between
+  Wishlist, Applied, Interview, Offer and Rejected
+- **Vacancies:** browse jobs from 10 Azerbaijani job sites (via az-job-radar) and save one as an
+  application in a click
+- **Salaries in two currencies:** every salary also shows in AZN or USD with the official CBAR
+  rate (via cbar-rates)
+- **Email updates:** forward job emails to a private address and statuses move by themselves
+  (applied → interview → offer / rejected), in English, Azerbaijani and Russian
+- **Accounts:** sign up and log in with JWT, each user sees only their own data
+- **Works on phones:** the list turns into cards on narrow screens
+- **Tested:** 133 backend tests (pytest-django) and 37 frontend tests (Vitest), both in CI
+
 ## Screenshots
 
 | My applications | Board |
