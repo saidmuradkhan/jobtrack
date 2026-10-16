@@ -47,6 +47,30 @@ pages, not the live sites.
 - **Frontend:** React (Vite) · Vitest · Testing Library
 - **Infra:** Vercel · Neon Postgres · GitHub Actions
 
+## Try it locally
+
+```bash
+cd backend
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements-dev.txt
+python manage.py migrate
+python manage.py seed_demo --password <pick-one>
+python manage.py runserver
+```
+
+In a second terminal:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open http://localhost:5173 and log in as `demo` with the password you picked: 12 applications
+in every status, a few email updates and one email waiting under "Please check". The
+Vacancies tab needs az-job-radar (see [Run the frontend locally](#run-the-frontend-locally)).
+
 ## Backend API
 
 | Method | Path | Description |
