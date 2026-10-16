@@ -9,6 +9,21 @@ and track every application from "applied" to "offer". Salaries are converted wi
 
 > Part of a 3-service system: az-job-radar (Python) · cbar-rates (Go) · **jobtrack** (Django + React)
 
+## Screenshots
+
+| My applications | Board |
+|---|---|
+| ![Applications list with salaries in AZN and USD](docs/screenshots/list.png) | ![Kanban board grouped by status](docs/screenshots/board.png) |
+
+| Vacancies from az-job-radar | Email updates |
+|---|---|
+| ![Vacancies collected by az-job-radar with a Save button](docs/screenshots/vacancies.png) | ![Forwarding address, an email waiting to be checked and recent updates](docs/screenshots/email-updates.png) |
+
+<img src="docs/screenshots/mobile.png" alt="The applications list on a phone, rows stacked as cards" width="260">
+
+The screenshots use the `seed_demo` data. The vacancies come from az-job-radar's saved test
+pages, not the live sites.
+
 ## Tech stack
 
 - **Backend:** Django · Django REST Framework · JWT auth · PostgreSQL
