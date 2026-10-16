@@ -39,6 +39,17 @@ describe('ApplicationList', () => {
     expect(onDelete).toHaveBeenCalledWith(application)
   })
 
+  it('labels the cells so rows can stack on phones', () => {
+    render(<ApplicationList applications={[application]} onEdit={vi.fn()} onDelete={vi.fn()} />)
+
+    const row = screen.getByRole('row', { name: /PASHA Bank/ })
+    const labels = within(row)
+      .getAllByRole('cell')
+      .map((cell) => cell.dataset.label)
+      .filter(Boolean)
+    expect(labels).toEqual(['Company', 'Status', 'Applied', 'Salary'])
+  })
+
   it('says so when the list is empty', () => {
     render(<ApplicationList applications={[]} onEdit={vi.fn()} onDelete={vi.fn()} />)
     expect(screen.getByText('No applications found.')).toBeInTheDocument()
