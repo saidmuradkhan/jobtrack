@@ -22,7 +22,7 @@ export default function ApplicationList({ applications, rates, onEdit, onDelete 
         <tbody>
           {applications.map((application) => (
             <tr key={application.id}>
-              <td>
+              <td className="position">
                 {application.url ? (
                   <a href={application.url} target="_blank" rel="noreferrer">
                     {application.position}
@@ -31,14 +31,14 @@ export default function ApplicationList({ applications, rates, onEdit, onDelete 
                   application.position
                 )}
               </td>
-              <td>{application.company}</td>
-              <td>
+              <td data-label="Company">{application.company}</td>
+              <td data-label="Status">
                 <span className={`badge ${application.status}`}>
                   {statusLabel(application.status)}
                 </span>
               </td>
-              <td>{application.applied_on}</td>
-              <td>
+              <td data-label="Applied">{application.applied_on}</td>
+              <td data-label="Salary">
                 {formatSalary(application)}
                 <div className="muted small">
                   {convertedSalary(application.salary, application.currency, rates)}
