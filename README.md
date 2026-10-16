@@ -1,5 +1,8 @@
 # jobtrack
 
+[![Backend CI](https://github.com/saidmuradkhan/jobtrack/actions/workflows/backend.yml/badge.svg)](https://github.com/saidmuradkhan/jobtrack/actions/workflows/backend.yml)
+[![Frontend CI](https://github.com/saidmuradkhan/jobtrack/actions/workflows/frontend.yml/badge.svg)](https://github.com/saidmuradkhan/jobtrack/actions/workflows/frontend.yml)
+
 Full-stack job application tracker: browse vacancies collected by
 [az-job-radar](https://github.com/saidmuradkhan/az-job-radar), save the ones you like,
 and track every application from "applied" to "offer". Salaries are converted with
