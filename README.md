@@ -252,6 +252,8 @@ jobtrack/
 - [x] PostgreSQL (Neon) through `DATABASE_URL`, SQLite locally
 - [x] Vercel config: serverless Django, CORS, static files, migrations workflow
 - [x] Demo data command (`seed_demo`)
+- [x] Phone layout for the applications list
+- [x] README with features, screenshots and a local demo guide
 - [ ] Deploy to jobs.saidmuradkhan.dev
 
 ## License
